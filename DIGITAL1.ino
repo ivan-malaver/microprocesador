@@ -1,28 +1,51 @@
-int boton1=2;
-int boton2=3;
-int boton3=4;
-int boton4=5;
-int led=7;
-int estadoboton1=0;//variable donde se guarda el estado del botonl
-int estadoboton2=0;//variable donde se guarda el estado del boton2
-int estadoboton3=0;//variable donde se guarda el estado del boton3
-int estadoboton4=0;//variable donde se guarda el estado del boton4
+bool estado1,estado2, estado3, estado4, ledA, ledB,ledC,ledD;
+
+
+
 void setup() {
-pinMode (boton1, INPUT);//pin 2 como entrada
-pinMode (boton2, INPUT);//pin 3 como entrada 
-pinMode (boton3, INPUT);//pin 4 como entrada
-pinMode (boton4, INPUT);//pin 5 como entrada pinMode(led, OUTPUT); // pin 7 como salida
+
+  
+
+  pinMode(8, INPUT);     // Inicializa el pin de entrada 1 como entrada
+  pinMode(7, INPUT);     // Inicializa el pin de entrada 2 como entrada
+  pinMode(6, INPUT);     // Inicializa el pin de entrada 3 como entrada
+  pinMode(5, INPUT);     // Inicializa el pin de entrada 4 como entrada
+
+  pinMode(1, OUTPUT);     // Inicializa el pin del LED como salida
+  pinMode(2, OUTPUT);     // Inicializa el pin del LED como salida
+  pinMode(3, OUTPUT);     // Inicializa el pin del LED como salida
+  pinMode(4, OUTPUT);     // Inicializa el pin del LED como salida
 }
+
 void loop() {
-estadoboton1 = digitalRead(boton1);//lectura digital de pin 2
-estadoboton2 = digitalRead(boton2);//lectura digital de pin 3
-estadoboton3 = digitalRead(boton1);//lectura digital de pin 4
-estadoboton2 = digitalRead(boton2);//lectura digital de pin 5
-//AND
-if (estadoboton1==LOW && estadoboton3==LOW && estadoboton4==HIGH ||estadoboton3==HIGH && estadoboton4==LOW ||estadoboton1==HIGH && estadoboton4==LOW || estadoboton1==HIGH && estadoboton2==HIGH && estadoboton3==HIGH)
-{
-digitalWrite(led, HIGH);
-delay(100);
+  estado1 = digitalRead(8); // Lee el estado del botón y lo almacena
+  estado2 = digitalRead(7); // Lee el estado del botón y lo almacena
+  estado3 = digitalRead(6); // Lee el estado del botón y lo almacena
+  estado4 = digitalRead(5); // Lee el estado del botón y lo almacena
+  delay(20);
+
+ledA = ((!estado1 && !estado3 && estado4)||(estado2 && estado4)||(estado2 && estado3)||(estado1 && estado3));
+    // I1 i3 i4 +i2 i4 +i2 i3 + i1 13 
+   
+  
+ ledB = ((!estado1 && !estado3 && estado4)||(estado3 && !estado4)||(estado1 && !estado4)||(estado1 && estado2 && estado3));
+   // I1 i3 i4 + i3 i4 +i1 i4 + i1 i2 i3 
+   
+    
+ledC = ((!estado1 && !estado2 && estado3)||(!estado1 && estado2 && estado4)||(estado2 && estado3 && estado4) || (estado1 && !estado2 && !estado4) || (estado1 && !estado3 && !estado4));
+    // I1 I2 I3 + I1 I2 I4 + I2 I3 I4 + I1 I2 I4 + I1 I3 I4  
+    
+    
+ledD = ((estado3 && estado4)||( !estado1 && estado2 && estado3)||(estado1 && !estado2 && !estado4) ||(estado1 && estado2 && !estado3));
+   // I3 I4 + I1 I2 I3 + I1 I2 I4 + I1 I2 I3
+    
+    
+    
+digitalWrite(1,ledA);
+digitalWrite(2,ledB);
+digitalWrite(3,ledC);
+digitalWrite(4,ledD);
+ delay(20);
+ 
+
 }
-else
-{
